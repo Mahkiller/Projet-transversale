@@ -22,7 +22,6 @@ import javax.servlet.http.Part;
 public class AddModeleServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Load data for dropdowns
         List<String> genres = GenreDAO.getAll();
         List<String> marques = MarqueDAO.getAll();
         List<String> types = TypeDAO.getAll();
@@ -42,7 +41,6 @@ public class AddModeleServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Handle form submission with optional file upload
         String modele = request.getParameter("modele");
         String marque = request.getParameter("marque");
         String type = request.getParameter("type");
@@ -51,7 +49,7 @@ public class AddModeleServlet extends HttpServlet {
         String couleur = request.getParameter("couleur");
         String pointure = request.getParameter("pointure");
         String prixStr = request.getParameter("prix");
-        String imageField = request.getParameter("image"); // generated filename from client
+        String imageField = request.getParameter("image");
         String quantiteStr = request.getParameter("quantite");
 
         String error = null;
@@ -77,7 +75,6 @@ public class AddModeleServlet extends HttpServlet {
             return;
         }
 
-        // Normalize and sanitize filename, then move uploaded file if provided
         Part filePart = null;
         try {
             filePart = request.getPart("imageFile");
@@ -88,7 +85,6 @@ public class AddModeleServlet extends HttpServlet {
         String finalImageFilename = null;
 
         if (filePart != null && filePart.getSize() > 0) {
-            // Generate filename base: modele_marque_couleur
             String base = (modele + "_" + marque + "_" + couleur).toLowerCase();
             finalImageFilename = normalizeFilename(base);
             if (!finalImageFilename.endsWith(".jpg") && !finalImageFilename.endsWith(".png") && !finalImageFilename.endsWith(".jpeg")) {
@@ -103,7 +99,6 @@ public class AddModeleServlet extends HttpServlet {
             File imagesDir = new File(imagesPath);
             if (!imagesDir.exists()) imagesDir.mkdirs();
 
-            // Ensure unique name to avoid conflicts
             File dest = new File(imagesDir, finalImageFilename);
             String nameOnly = finalImageFilename;
             int counter = 1;
@@ -133,7 +128,6 @@ public class AddModeleServlet extends HttpServlet {
             if (!finalImageFilename.endsWith(".jpg") && !finalImageFilename.endsWith(".png") && !finalImageFilename.endsWith(".jpeg")) {
                 finalImageFilename += ".jpg";
             }
-            // Note: no file was uploaded, so the admin must ensure the file exists in images/
         } else {
             request.setAttribute("error", "Image requise");
             doGet(request, response);
@@ -154,11 +148,9 @@ public class AddModeleServlet extends HttpServlet {
             return;
         }
 
-        // Insert modele if not exists
         ModeleDAO.insertIfNotExists(modele);
         int idModele = ModeleDAO.getIdByName(modele);
 
-        // Insert modele_chaussure and get its id
         int modeleChaussureId = ModeleChaussureDAO.insertAndGetId(idGenre, idMarque, idType, idModele, idTrancheAge, "");
         if (modeleChaussureId == -1) {
             request.setAttribute("error", "Erreur d'insertion du modèle");
@@ -166,7 +158,6 @@ public class AddModeleServlet extends HttpServlet {
             return;
         }
 
-        // Insert into t_chaussure and get generated id
         int chaussureId = -1;
         Connection conn = null;
         PreparedStatement pst = null;
@@ -193,7 +184,6 @@ public class AddModeleServlet extends HttpServlet {
             return;
         }
 
-        // Insert stock entry
         try (Connection c2 = DBUtil.getConnection(); PreparedStatement s2 = c2.prepareStatement("INSERT INTO t_stock (idChaussure, quantite) VALUES (?, ?)") ) {
             s2.setInt(1, chaussureId);
             s2.setInt(2, quantite);
@@ -210,9 +200,7 @@ public class AddModeleServlet extends HttpServlet {
         String s = raw.trim().toLowerCase();
         s = s.replaceAll("\\s+", "_");
         s = s.replaceAll("[^a-z0-9_\\.-]", "_");
-        // collapse multiple underscores
         s = s.replaceAll("_+", "_");
-        // ensure extension
         if (!s.endsWith(".jpg") && !s.endsWith(".png") && !s.endsWith(".jpeg")) {
             s = s + ".jpg";
         }
@@ -221,7 +209,6 @@ public class AddModeleServlet extends HttpServlet {
 
     private String correctCommonTypos(String s) {
         if (s == null) return null;
-        // simple map of typos
         s = s.replaceAll("doncin", "doncic");
         s = s.replaceAll("doncinic", "doncic");
         return s;
