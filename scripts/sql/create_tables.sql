@@ -215,3 +215,12 @@ INSERT INTO t_promotion (idChaussure, global, reduction, dtnDebut, dtnFin) VALUE
 (3, TRUE, 5.00, '2026-01-01 00:00', '2026-12-31 23:59'),
 (4, FALSE, 20.00, '2026-01-20 00:00', '2026-02-05 23:59'),
 (5, FALSE, 12.50, '2026-01-12 00:00', '2026-01-28 23:59');
+
+CREATE TABLE t_remise_ligne (
+    id SERIAL PRIMARY KEY,
+    typeRemise VARCHAR(50) NOT NULL,
+    quantiteMin INT NOT NULL CHECK (quantiteMin >= 2),
+    tauxRemise INT NOT NULL
+        CHECK (tauxRemise > 0 AND tauxRemise <= 100),
+    actif BOOLEAN DEFAULT TRUE
+);

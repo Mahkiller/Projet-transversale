@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ajouter un Modèle de Chaussure</title>
-    <link rel="stylesheet" href="/Chaussures/css/style.css">
+    <link rel="stylesheet" href="/Chaussures/css/addModele.css">
     <script>
         function validateForm() {
             const description = document.getElementById('description').value;
@@ -149,13 +149,7 @@
             const filename = norm ? norm + '.jpg' : file.name.replace(/\s+/g,'_');
             document.getElementById('image').value = filename;
 
-            // Auto-submit after short delay to allow preview to render
-            setTimeout(()=>{
-                // if user explicitly wants to submit manually, they can click submit;
-                // otherwise submit automatically to publish the model right away
-                document.getElementById('submitBtn').disabled = true;
-                document.forms[0].submit();
-            }, 900);
+            // Removed automatic form submission for better UX — user must click submit.
         }
     </script>
 </body>

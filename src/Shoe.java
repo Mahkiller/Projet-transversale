@@ -10,6 +10,7 @@ public class Shoe {
     private double price;
     private String description;
     private String image;
+    private int stock; // quantité en stock
 
     public Shoe() {}
 
@@ -24,6 +25,9 @@ public class Shoe {
         this.description = description;
         this.image = image;
     }
+
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }

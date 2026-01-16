@@ -1,0 +1,10 @@
+/* Styles for addModele.jsp form */
+:root{--card:#fff;--muted:#6b7280;--accent:#2563eb}
+body{font-family:Inter,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#fbfdff,#eef6f8)}
+.container{max-width:900px;margin:0 auto;padding:20px}
+.form-group label{display:block;margin-bottom:6px;font-weight:700;color:#12323a}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px;border-radius:10px;border:1px solid #e6eef0;background:#fff}
+.submit-row{display:flex;gap:8px;align-items:center;margin-top:12px}
+.preview{margin-top:12px}
+.btn-primary{background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;border:none}
+@media(max-width:720px){.container{padding:12px}}
